@@ -1,0 +1,9 @@
+dash==2.1.0
+pandas
+gunicorn
+io
+base64
+h5py
+plotly
+numpy
+
