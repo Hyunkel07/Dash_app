@@ -7,3 +7,4 @@ numpy
 dash-bootstrap-components==1.7.1
 dash-core-components==2.0.0
 dash-html-components==2.0.0
+kaleido
