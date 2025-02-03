@@ -104,9 +104,19 @@ app.layout = html.Div([
         html.Div(id='output-data-upload'),
         dcc.Store(id='contents-store')
     ]),
-    dcc.Graph(id='graph')
-    
+    dcc.Graph(id='graph'),
+    html.Div([
+        html.Label('Width:'),
+        dcc.Input(id='width', type='number', value=800),
+    ]),
+    html.Div([
+        html.Label('Height:'),
+        dcc.Input(id='height', type='number', value=600),
+    ]),
+    html.Button("Download Image", id="btn_image"),
+    dcc.Download(id="download-image")   
 ])
+
 
 @app.callback(
     Output('data-key-dropdown', 'options'),
@@ -267,5 +277,19 @@ def update_graph(xmin, xmax, ymin, ymax, selected_radionuclides, x_axis_type, y_
         return fig
     return {}
 
+
+@app.callback(
+    Output("download-image", "data"),
+    Input("btn_image", "n_clicks"),
+    [State('graph', 'figure'),
+     State('width', 'value'),
+     State('height', 'value')],
+    prevent_initial_call=True,
+)
+def download_figure(n_clicks, figure, width, height):
+    fig = go.Figure(data=figure['data'], layout=figure['layout'])
+    image_bytes = fig.to_image(format='png', width=width, height=height)
+    encoded_image = base64.b64encode(image_bytes).decode()
+    return dict(content=encoded_image, filename='figure.png', type='image/png', base64=True)
 if __name__ == '__main__':
     app.run_server(debug=True)
